@@ -17,7 +17,7 @@ app.use(express.json({limit: "100mb"}));
 app.use(express.urlencoded({ extended: true }));
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(morgan(dev));
+app.use(morgan("dev"));
 app.use(errorMiddleWare)
 
 await db()

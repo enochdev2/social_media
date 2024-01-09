@@ -4,14 +4,14 @@ const errorMiddleWare = (err, req, res, next) => {
     success: "failed",
     message: err,
   };
-};
-
-if (err?.name === "ValidationError") {
-  defaultError.statusCode = 404;
-
+  
+  if(err?.name === "ValidationError") {
+    defaultError.statusCode = 404;
+    
   defaultError.message = Object.values(err, errors)
-    .map((el) => el.message)
-    .join(",");
+  .map((el) => el.message)
+  .join(",");
+};
 
   if (err.code && err.code === 11000) {
     defaultError.statusCode = 404;
@@ -22,6 +22,6 @@ if (err?.name === "ValidationError") {
     success: defaultError.success,
     message: defaultError.message,
   });
-}
+};
  
 export default errorMiddleWare
