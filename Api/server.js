@@ -3,15 +3,16 @@ import dotenv from "dotenv";
 import cors from "cors";
 import helmet from "helmet";
 import bodyParser from "body-parser";
+import path from 'path';
 import morgan from "morgan";
 import { db } from "./lib/index.js";
 import errorMiddleWare from "./middleware/middleware.js";
 import router from "./routes/index.js";
-
+const _dirname = path.resolve(path.dirname(''));
 dotenv.config();
 const app = express();
 
-
+app.use(exprss.static(path.join(_dirname, "views/build")))
 app.use(cors());
 app.use(helmet());
 app.use(express.json({limit: "100mb"}));
