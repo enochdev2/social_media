@@ -64,6 +64,14 @@ export const login = async (req, res, next) => {
     }
 
     const token = jwtSignIn(user?._id);
+
+    res.status(201).json({
+      success: true,
+      message: "Login Successfully", 
+      user,
+      token,
+    });
+    
   } catch (error) {
     console.log(error);
     res.status(404).json({ message: error.message });

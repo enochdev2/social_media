@@ -6,6 +6,7 @@ import bodyParser from "body-parser";
 import morgan from "morgan";
 import { db } from "./lib/index.js";
 import errorMiddleWare from "./middleware/middleware.js";
+import router from "./routes/index.js";
 
 dotenv.config();
 const app = express();
@@ -22,9 +23,7 @@ app.use(errorMiddleWare)
 
 await db()
 
-app.get("/" ,(req, res)=>{
-res.json("new api")
-});
+app.use(router)
 
 const PORT = process.env.port || 3000;
 
