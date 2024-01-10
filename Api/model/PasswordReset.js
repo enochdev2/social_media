@@ -8,6 +8,6 @@ const PassWordResetSchema = new mongoose.Schema({
   expiresAt: Date,
 });
 
-const PassWordReset = mongoose.model("PassWordReset", PassWordResetSchema);
+const PasswordReset = mongoose.model("PasswordReset", PassWordResetSchema);
 
-export default PassWordReset;
+export default PasswordReset;

@@ -23,7 +23,7 @@ export const register = async (req, res, next) => {
       password: hashedPassword,
     });
 
-    sendVerificationEmail(validUser, res);
+    sendVerificationEmail(newUser, res);
   } catch (error) {
     console.log(error);
     res.status(404).json({ message: error.message });

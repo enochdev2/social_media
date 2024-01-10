@@ -1,33 +1,35 @@
 import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
-import helmet from "helmet";
+import morgan from "morgan";
 import bodyParser from "body-parser";
 import path from "path";
-import morgan from "morgan";
+//security packages
+import helmet from "helmet";
 import { db } from "./lib/index.js";
 import errorMiddleWare from "./middleware/middleware.js";
 import router from "./routes/index.js";
+
 const _dirname = path.resolve(path.dirname(""));
+
 dotenv.config();
 const app = express();
 
 app.use(express.static(path.join(_dirname, "views/build")));
-app.use(cors());
-app.use(helmet());
-app.use(express.json({ limit: "100mb" }));
-app.use(express.urlencoded({ extended: true }));
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(morgan("dev"));
-app.use(errorMiddleWare);
-
 await db();
-
-app.use(router);
-
 const PORT = process.env.port || 3000;
 
+app.use(helmet());
+app.use(cors());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.json({ limit: "100mb" }));
+app.use(express.urlencoded({ extended: true }));
+
+app.use(morgan("dev"));
+app.use(router);
+app.use(errorMiddleWare);
+
 app.listen(PORT, () => {
-  console.log(`server running on Port: ${3000}`);
+  console.log(`server running on Port: ${PORT}`);
 });
