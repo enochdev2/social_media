@@ -17,7 +17,8 @@ const app = express();
 
 app.use(express.static(path.join(_dirname, "views/build")));
 await db();
-const PORT = process.env.port || 3000;
+
+const PORT = process.env.port || 4000;
 
 app.use(helmet());
 app.use(cors());
