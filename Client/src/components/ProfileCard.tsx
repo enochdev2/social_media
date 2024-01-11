@@ -1,4 +1,3 @@
-import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { LiaEditSolid } from "react-icons/lia";
@@ -12,11 +11,13 @@ import { FaTwitterSquare } from "react-icons/fa";
 import { CiLocationOn } from "react-icons/ci";
 import moment from "moment";
 
-import { NoProfile } from "../assets";
+import  NoProfile  from "../assets/userprofile.png";
 import { UpdateProfile } from "../redux/userSlice";
 
-const ProfileCard = ({ user }) => {
-  const { user: data, edit } = useSelector((state) => state.user);
+type User = any
+
+const ProfileCard = ({ user }:User) => {
+  const { user: data, edit } = useSelector((state:User) => state.user);
   const dispatch = useDispatch();
 
   return (
@@ -45,10 +46,12 @@ const ProfileCard = ({ user }) => {
               <LiaEditSolid
                 size={22}
                 className='text-blue cursor-pointer'
-                onClick={() => dispatch(UpdateProfile(true))}
+                onClick={() => dispatch(UpdateProfile(true) as User)}
               />
             ) : (
               <button
+              title="button"
+              type="button"
                 className='bg-[#0444a430] text-sm text-white p-1 rounded'
                 onClick={() => {}}
               >

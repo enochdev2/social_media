@@ -7,7 +7,7 @@ const CustomButton = ({
 }: {
   title: string;
   type?: string | any;
-  onClick?: () => {};
+  onClick?: any;
   containerStyles?: any;
   iconRight?: any;
 }) => {

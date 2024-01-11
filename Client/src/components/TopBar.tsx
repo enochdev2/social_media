@@ -1,4 +1,3 @@
-import React from "react";
 import { TbSocial } from "react-icons/tb";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
@@ -9,10 +8,13 @@ import { BsMoon, BsSunFill } from "react-icons/bs";
 import { IoMdNotificationsOutline } from "react-icons/io";
 import { SetTheme } from "../redux/theme";
 import { Logout } from "../redux/userSlice";
+import { UnknownAction } from "@reduxjs/toolkit";
+
+type State = any
 
 const TopBar = () => {
-  const { theme } = useSelector((state) => state.theme);
-  const { user } = useSelector((state) => state.user);
+  const { theme } = useSelector((state:State) => state.theme);
+  const { user } = useSelector((state:State) => state.user);
   const dispatch = useDispatch();
   const {
     register,
@@ -23,10 +25,10 @@ const TopBar = () => {
   const handleTheme = () => {
     const themeValue = theme === "light" ? "dark" : "light";
 
-    dispatch(SetTheme(themeValue));
+    dispatch(SetTheme(themeValue) as any);
   };
 
-  const handleSearch = async (data) => {};
+  const handleSearch = async (data:any) => {};
 
   return (
     <div className='topbar w-full flex items-center justify-between py-3 md:py-6 px-4 bg-primary'>
@@ -66,7 +68,7 @@ const TopBar = () => {
 
         <div>
           <CustomButton
-            onClick={() => dispatch(Logout())}
+            onClick={() => dispatch(Logout() as any)}
             title='Log Out'
             containerStyles='text-sm text-ascent-1 px-4 md:px-6 py-1 md:py-2 border border-[#666] rounded-full'
           />

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import  { ChangeEvent, useState } from "react";
 import { useForm } from "react-hook-form";
 import { MdClose } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
@@ -7,10 +7,12 @@ import Loading from "./Loading";
 import CustomButton from "./CustomButton";
 import { UpdateProfile } from "../redux/userSlice";
 
+type User = any
+
 const EditProfile = () => {
-  const { user } = useSelector((state) => state.user);
+  const { user } = useSelector((state: User) => state.user);
   const dispatch = useDispatch();
-  const [errMsg, setErrMsg] = useState("");
+  const [errMsg, setErrMsg] = useState<{message:string, status:string}>();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [picture, setPicture] = useState(null);
 
@@ -23,12 +25,12 @@ const EditProfile = () => {
     defaultValues: { ...user },
   });
 
-  const onSubmit = async (data) => {};
+  const onSubmit = async () => {};
 
   const handleClose = () => {
     dispatch(UpdateProfile(false));
   };
-  const handleSelect = (e) => {
+  const handleSelect = (e:ChangeEvent<HTMLInputElement>| any) => {
     setPicture(e.target.files[0]);
   };
 
@@ -55,7 +57,7 @@ const EditProfile = () => {
                 Edit Profile
               </label>
 
-              <button className='text-ascent-1' onClick={handleClose}>
+              <button title="button" type="button" className='text-ascent-1' onClick={handleClose}>
                 <MdClose size={22} />
               </button>
             </div>
@@ -114,6 +116,7 @@ const EditProfile = () => {
                 htmlFor='imgUpload'
               >
                 <input
+                title="input"
                   type='file'
                   className=''
                   id='imgUpload'

@@ -10,18 +10,20 @@ import {
   TextInput,
   TopBar,
 } from "../../components";
-import { suggest, requests, posts } from "../assets/data";
+import { suggest, requests, posts } from "../../assets/data";
 import { Link } from "react-router-dom";
 import NoProfile from "../../assets/userprofile.png";
 import { BsFiletypeGif, BsPersonFillAdd } from "react-icons/bs";
 import { BiImages, BiSolidVideo } from "react-icons/bi";
 import { useForm } from "react-hook-form";
 
+type User = any
+
 const Home = () => {
-  const { user, edit } = useSelector((state) => state.user);
+  const { user, edit } = useSelector((state:User) => state.user);
   const [friendRequest, setFriendRequest] = useState(requests);
   const [suggestedFriends, setSuggestedFriends] = useState(suggest);
-  const [errMsg, setErrMsg] = useState("");
+  const [errMsg, setErrMsg] = useState<{message:string, status:string}>();
   const [file, setFile] = useState<any>(null);
   const [posting, setPosting] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -88,7 +90,7 @@ const Home = () => {
                 >
                   <input
                     type="file"
-                    onChange={(e) => setFile(e.target.files[0])}
+                    onChange={(e:any) => setFile(e.target.files[0])}
                     className="hidden"
                     id="imgUpload"
                     data-max-size="5120"
@@ -105,7 +107,7 @@ const Home = () => {
                   <input
                     type="file"
                     data-max-size="5120"
-                    onChange={(e) => setFile(e.target.files[0])}
+                    onChange={(e:any) => setFile(e.target.files[0])}
                     className="hidden"
                     id="videoUpload"
                     accept=".mp4, .wav"
@@ -121,7 +123,7 @@ const Home = () => {
                   <input
                     type="file"
                     data-max-size="5120"
-                    onChange={(e) => setFile(e.target.files[0])}
+                    onChange={(e:any) => setFile(e.target.files[0])}
                     className="hidden"
                     id="vgifUpload"
                     accept=".gif"
