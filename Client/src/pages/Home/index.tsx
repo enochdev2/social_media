@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useSelector } from "react-redux";
 import {
   CustomButton,
@@ -12,7 +12,7 @@ import {
 } from "../../components";
 import { suggest, requests, posts } from "../assets/data";
 import { Link } from "react-router-dom";
-import  NoProfile  from "../../assets/userprofile.png";
+import NoProfile from "../../assets/userprofile.png";
 import { BsFiletypeGif, BsPersonFillAdd } from "react-icons/bs";
 import { BiImages, BiSolidVideo } from "react-icons/bi";
 import { useForm } from "react-hook-form";
