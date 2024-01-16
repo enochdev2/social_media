@@ -15,7 +15,8 @@ import NoProfile from "../../assets/userprofile.png";
 import { BsFiletypeGif, BsPersonFillAdd } from "react-icons/bs";
 import { BiImages, BiSolidVideo } from "react-icons/bi";
 import { useForm } from "react-hook-form";
-import { apiRequest, deletePosts, fetcchPosts, handleFileUpload, likePosts } from "../../utils";
+import { apiRequest, deletePosts, fetcchPosts, getUserInfo, handleFileUpload, likePosts, sendFriendRequest } from "../../utils";
+import { UserLogin } from "../../redux/userSlice";
 
 
 type User = any;
@@ -92,14 +93,60 @@ const Home = () => {
     setFriendRequest(res?.data);
 
    } catch (error) {
+    console.log(error);
     
    }
   };
 
-  const fetchSuggestedFriends = async () => {};
-  const handleFriendRequests = async () => {};
-  const acceptFriendRequests = async () => {};
-  const getUser = async () => {};
+  const fetchSuggestedFriends = async () => {
+    try {
+      const res = await apiRequest({
+        url: "/users/suggested-friends",
+        token: user?.token, 
+        method: "POST"
+      });
+      setSuggestedFriends(res?.data);
+     } catch (error) {
+      console.log(error);
+      
+     }
+  };
+
+  const handleFriendRequests = async (id: number | string) => {
+    try {
+      const res = await sendFriendRequest(user.token, id)
+      await fetchSuggestedFriends();
+     } catch (error) {
+      console.log(error);   
+     }
+  };
+  const acceptFriendRequests = async (id:string, status: string) => {   
+    
+    try {
+    const res = await apiRequest({
+      url: "/users/accept-request",
+      token: user?.token, 
+      method: "POST",
+      data:{
+        rid: id , status
+      },
+    });
+    setFriendRequest(res?.data);
+
+   } catch (error) {
+    console.log(error);
+    
+   }
+
+  };
+
+  const getUser = async () => {
+
+    const res = await getUserInfo(user?.token)
+    const newData = {token: user?.token, ...res };
+    dispatch(UserLogin(newData) as any)
+
+  };
 
 useEffect(() => {
   setLoading(true);
@@ -251,7 +298,7 @@ useEffect(() => {
               </div>
 
               <div className="w-full flex flex-col gap-4 pt-4">
-                {friendRequest?.map(({ _id, requestFrom: from }) => (
+                {friendRequest?.map(({ _id, requestFrom: from }:any) => (
                   <div key={_id} className="flex items-center justify-between">
                     <Link
                       to={"/profile/" + from._id}
@@ -275,10 +322,13 @@ useEffect(() => {
                     <div className="flex gap-1">
                       <CustomButton
                         title="Accept"
+                        onClick={()=> acceptFriendRequests(_id, "Accepted")}
                         containerStyles="bg-[#0444a4] text-xs text-white px-1.5 py-1 rounded-full"
                       />
                       <CustomButton
                         title="Deny"
+                        onClick={()=> acceptFriendRequests(_id, "Denied")}
+
                         containerStyles="border border-[#666] text-xs text-ascent-1 px-1.5 py-1 rounded-full"
                       />
                     </div>
@@ -293,7 +343,7 @@ useEffect(() => {
                 <span>Friend Suggestion</span>
               </div>
               <div className="w-full flex flex-col gap-4 pt-4">
-                {suggestedFriends?.map((friend) => (
+                {suggestedFriends?.map((friend:any) => (
                   <div
                     className="flex items-center justify-between"
                     key={friend._id}
@@ -320,9 +370,10 @@ useEffect(() => {
 
                     <div className="flex gap-1">
                       <button
+                      type="button"
                         title="button"
                         className="bg-[#0444a430] text-sm text-white p-1 rounded"
-                        onClick={() => {}}
+                        onClick={() => handleFriendRequests(friend?._id)}
                       >
                         <BsPersonFillAdd size={20} className="text-[#0f52b6]" />
                       </button>

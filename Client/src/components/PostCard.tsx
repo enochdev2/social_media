@@ -8,8 +8,21 @@ import { useForm } from "react-hook-form";
 import TextInput from "./TextInput";
 import Loading from "./Loading";
 import CustomButton from "./CustomButton";
-import { postComments } from "../assets/data";
 import { Comment } from "../utils/constant";
+import { apiRequest } from "../utils";
+
+const getPostComments = async (id:string) => {
+try {
+  const res = await apiRequest({
+    url: "/posts/comments" + id,
+    method: "GET",
+  });
+  return res?.data;
+} catch (error) {
+  console.log(error);
+  
+}
+}
 
 const ReplyCard = ({ reply, user, handleLike }: {reply:any, user:any, handleLike:any }) => {
   return (
@@ -57,7 +70,7 @@ const ReplyCard = ({ reply, user, handleLike }: {reply:any, user:any, handleLike
 
 const CommentForm = ({ user, id, replyAt, getComments }: any) => {
   const [loading, setLoading] = useState(false);
-  const [errMsg, setErrMsg] = useState<{ message: string; status: string }>();
+  const [errMsg, setErrMsg] = useState<{ message: string; status?: string }>();
   const {
     register,
     handleSubmit,
@@ -67,7 +80,40 @@ const CommentForm = ({ user, id, replyAt, getComments }: any) => {
     mode: "onChange",
   });
 
-  const onSubmit = async () => {};
+  const onSubmit = async (data:any) => {
+    setLoading(true);
+    setErrMsg({message: ''})
+    try {
+      const URL = !replyAt ? "/posts/comment/" + id : "/posts/reply-comment/" + id;
+
+      const newData = {
+        comment: data?.comment,
+        from: user?.firstName + " " + user?.lastName,
+        replyAt: replyAt
+      };
+
+      const res = await apiRequest({
+        url: URL,
+        data: newData,
+        token: user?.token,
+        method: "POST",
+      })
+      if(res?.status === "failed") {
+        setErrMsg(res);
+
+      }else{
+        reset({
+          comment: " ",
+        });
+        setErrMsg({message: ' '});
+        await getComments();
+      }
+      setLoading(false);
+    } catch (error) {
+      console.log(error);
+      
+    }
+  };
 
   return (
     <form
@@ -127,16 +173,16 @@ const PostCard = ({ post, user, deletePost, likePost }: any) => {
   const [replyComments, setReplyComments] = useState(0);
   const [showComments, setShowComments] = useState(0);
 
-  const getComments = async (postComments:any) => {
+  const getComments = async (id:string) => {
     setReplyComments(0);
-
-    setComments(postComments);
+   const result = await getPostComments(id)
+    setComments(result);
     setLoading(false);
   };
 
   const handleLike = async (uri:string) => {
     await likePost(uri);
-    await getComments(post?.id)
+    await getComments(post?._id)
 
   };
 
@@ -274,7 +320,8 @@ const PostCard = ({ post, user, deletePost, likePost }: any) => {
                   <p className="text-ascent-2">{comment?.comment}</p>
 
                   <div className="mt-2 flex gap-6">
-                    <p className="flex gap-2 items-center text-base text-ascent-2 cursor-pointer">
+                    <p className="flex gap-2 items-center text-base text-ascent-2 cursor-pointer"
+                    onClick={()=> handleLike("/posts/like-comment/" + comment?._id) } >
                       {comment?.likes?.includes(user?._id) ? (
                         <BiSolidLike size={20} color="blue" />
                       ) : (

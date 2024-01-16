@@ -90,7 +90,7 @@ import { Dispatch } from "@reduxjs/toolkit";
 
  }
 
- export const getUserInfo = async(token:string, id:string | number, )=>{
+ export const getUserInfo = async(token:string, id?:string | number, )=>{
     try {
         const uri = id === undefined ? "/users/get-user" : "/users/get-user/" + id;
         const res = await apiRequest({
