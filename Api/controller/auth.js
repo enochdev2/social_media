@@ -19,6 +19,7 @@ export const register = async (req, res, next) => {
 
   try {
     const validUser = await Users.findOne({ email });
+
     if (validUser) return next("User already Exists");
 
     const hashedPassword = await hassString(password);
