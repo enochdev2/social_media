@@ -3,11 +3,11 @@ import { SetPosts } from "../redux/postSlice";
 import { Dispatch } from "@reduxjs/toolkit";
 
 
- const API_URI = "http://localhost:4000";
+ const API_URI = "http://localhost:3000";
 
  export const Api = axios.create({ 
     baseURL : API_URI,
-   ResponseType: "json"
+   responseType: "json",
 }
 );
  export const apiRequest = async ({ url, token, data, method}:{url:string, token?:string, data?:any, method: any}) =>{
