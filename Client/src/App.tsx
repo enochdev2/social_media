@@ -4,6 +4,7 @@ import Home from "./pages/Home"
 import Profile from "./pages/Profile"
 import Login from "./pages/Auth/login"
 import Register from "./pages/Auth/register"
+import ResetPassword from "./pages/ResetPassword";
 
 function Layout() {
   const { user } = useSelector((state) => state.user);
@@ -18,7 +19,7 @@ function Layout() {
 
 
 function App() {
-  const { theme } = useSelector((state) => state.theme);
+  const { theme } = useSelector((state:any) => state.theme);
 
 
   return (
@@ -31,7 +32,7 @@ function App() {
 
       <Route path='/register' element={<Register />} />
       <Route path='/login' element={<Login />} />
-      {/* <Route path='/reset-password' element={<ResetPassword />} /> */}
+      <Route path='/reset-password' element={<ResetPassword />} />
     </Routes>
   </div>
   )

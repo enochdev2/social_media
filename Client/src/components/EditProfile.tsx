@@ -1,20 +1,23 @@
-import  { ChangeEvent, useState } from "react";
+import  { ChangeEvent, SetStateAction, useState } from "react";
 import { useForm } from "react-hook-form";
 import { MdClose } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
 import TextInput from "./TextInput";
 import Loading from "./Loading";
 import CustomButton from "./CustomButton";
-import { UpdateProfile } from "../redux/userSlice";
+import { UpdateProfile, UserLogin } from "../redux/userSlice";
+import { apiRequest, handleFileUpload } from "../utils";
+import { UserInfo } from "../utils/constant";
 
 type User = any
 
 const EditProfile = () => {
   const { user } = useSelector((state: User) => state.user);
   const dispatch = useDispatch();
-  const [errMsg, setErrMsg] = useState<{message:string, status:string}>();
+  const [errMsg, setErrMsg] = useState<{message:string, status?:string}>();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [picture, setPicture] = useState(null);
+
 
   const {
     register,
@@ -25,10 +28,47 @@ const EditProfile = () => {
     defaultValues: { ...user },
   });
 
-  const onSubmit = async () => {};
+  const onSubmit = async (data:UserInfo) => {
+    setIsSubmitting(true);
+    setErrMsg({message:''});
+    try {
+      const url = picture && (await handleFileUpload(picture));
+      const {firstName, lastName ,  location, profession} = data;
+
+      const res = await apiRequest({
+        url: "/users/update-user",
+        data: {
+          firstName, 
+          lastName,
+          location,
+          profession,
+          profileUrl: url ? url : user?.profileUrl
+        },
+        method: "PUT",
+        token: user?.token,
+      });
+
+      if(res?.status === "failed") {
+        setErrMsg(res);
+    }else{
+      setErrMsg(res);
+      const newUser = { token: res?.token, ...res?.user};
+      dispatch(UserLogin(newUser) as any);
+      
+      setTimeout(()=> {
+        dispatch(UpdateProfile(false)as any)
+      },3000)
+    }
+         setIsSubmitting(false)
+    } catch (error) {
+      console.log(error);
+    setIsSubmitting(false);
+      
+    }
+  };
 
   const handleClose = () => {
-    dispatch(UpdateProfile(false));
+    dispatch(UpdateProfile(false) as any);
   };
   const handleSelect = (e:ChangeEvent<HTMLInputElement>| any) => {
     setPicture(e.target.files[0]);

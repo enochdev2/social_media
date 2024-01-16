@@ -20,3 +20,10 @@ export interface Comment {
     likes: any
    
 }
+export interface UserInfo {
+    firstName: string , 
+    lastName: string , 
+    location: string , 
+    profession: string ,
+    profileUrl?: string,
+}

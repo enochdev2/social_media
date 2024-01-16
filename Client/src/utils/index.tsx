@@ -43,7 +43,7 @@ import { Dispatch } from "@reduxjs/toolkit";
  }
 
 
- export const fetcchPosts = async(token:string, dispatch: Dispatch, uri:string, data:any)=>{
+ export const fetcchPosts = async(token?:string, dispatch?: Dispatch | any, uri?:string, data?:any)=>{
     try {
         const res = await apiRequest({
             url: uri || "/posts", 
@@ -59,7 +59,7 @@ import { Dispatch } from "@reduxjs/toolkit";
     }
 
  }
- export const likePosts = async(token:string, uri:string, )=>{
+ export const likePosts = async(token:string, uri:string )=>{
     try {
         const res = await apiRequest({
             url: uri, 

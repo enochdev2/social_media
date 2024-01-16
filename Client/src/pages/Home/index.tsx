@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   CustomButton,
   EditProfile,
@@ -10,24 +10,26 @@ import {
   TextInput,
   TopBar,
 } from "../../components";
-import { suggest, requests, posts } from "../../assets/data";
 import { Link } from "react-router-dom";
 import NoProfile from "../../assets/userprofile.png";
 import { BsFiletypeGif, BsPersonFillAdd } from "react-icons/bs";
 import { BiImages, BiSolidVideo } from "react-icons/bi";
 import { useForm } from "react-hook-form";
-import { apiRequest, handleFileUpload } from "../../utils";
+import { apiRequest, deletePosts, fetcchPosts, handleFileUpload, likePosts } from "../../utils";
+
 
 type User = any;
 
 const Home = () => {
   const { user, edit } = useSelector((state: User) => state.user);
-  const [friendRequest, setFriendRequest] = useState(requests);
-  const [suggestedFriends, setSuggestedFriends] = useState(suggest);
+  const {posts}= useSelector((state:User) => state.posts)
+  const [friendRequest, setFriendRequest] = useState([]);
+  const [suggestedFriends, setSuggestedFriends] = useState([]);
   const [errMsg, setErrMsg] = useState<{ message?: string; status?: string }>();
   const [file, setFile] = useState<any>(null);
   const [posting, setPosting] = useState(false);
   const [loading, setLoading] = useState(false);
+  const dispatch = useDispatch();
 
   const {
     register,
@@ -59,6 +61,7 @@ const Home = () => {
     setFile(null);
     setErrMsg({message:""});
     await fetchPost();
+    setLoading(false);
   }
   setPosting(false);
     } catch (error) {
@@ -66,10 +69,33 @@ const Home = () => {
     }
   };
 
-  const fetchPost = async () => {};
-  const handleLikePost = async () => {};
-  const handleDelete = async () => {};
-  const fetchFriendRequests = async () => {};
+  const fetchPost = async () => {
+    await fetcchPosts(user?.token, dispatch)
+  };
+  const handleLikePost = async (uri:string) => {
+    await likePosts(uri,user?.token);
+    await fetchPost();
+  };
+
+  const handleDelete = async (id: string ) => {
+    await  deletePosts(id, user.token);
+    await fetchPost();
+  };
+
+  const fetchFriendRequests = async () => {
+   try {
+    const res = await apiRequest({
+      url: "/users/get-friend-request",
+      token: user?.token, 
+      method: "POST"
+    });
+    setFriendRequest(res?.data);
+
+   } catch (error) {
+    
+   }
+  };
+
   const fetchSuggestedFriends = async () => {};
   const handleFriendRequests = async () => {};
   const acceptFriendRequests = async () => {};
@@ -199,13 +225,13 @@ useEffect(() => {
             {loading ? (
               <Loading />
             ) : posts?.length > 0 ? (
-              posts?.map((post) => (
+              posts?.map((post:User) => (
                 <PostCard
                   key={post?._id}
                   post={post}
                   user={user}
-                  deletePost={() => {}}
-                  likePost={() => {}}
+                  deletePost={handleDelete}
+                  likePost={handleLikePost}
                 />
               ))
             ) : (
