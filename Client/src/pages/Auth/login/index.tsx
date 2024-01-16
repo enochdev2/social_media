@@ -11,8 +11,13 @@ import Loading from "../../../components/Loading";
 
 import BgImage from "../../../assets/img.jpeg";
 import TextInput from "../../../components/TextInput";
+import { apiRequest } from "../../../utils";
+import { UserLogin } from "../../../redux/userSlice";
 
 const Login = () => {
+  const [errMsg, setErrMsg] = useState<any>("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const dispatch = useDispatch();
   const {
     register,
     handleSubmit,
@@ -21,11 +26,29 @@ const Login = () => {
     mode: "onChange",
   });
 
-  const onSubmit = async () => {};
+  const manageSubmit = async (data: any) => {
+    setIsSubmitting(true);
+    try {
+      const res = await apiRequest({
+        url: "/auth/login",
+        method: "POST",
+        data: data,
+      });
+      if (res?.status === "failed") {
+        setErrMsg(res);
+      } else {
+        setErrMsg("");
+        const newData = { token: res?.token, ...res?.user };
+        dispatch(UserLogin(newData) as any);
+        window.location.replace("/");
+      }
+      setIsSubmitting(false);
+    } catch (error) {
+      console.log(error);
+      setIsSubmitting(false);
+    }
+  };
 
-  const [errMsg, setErrMsg] = useState<any>("");
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const dispatch = useDispatch();
   return (
     <div className="bg-bgColor w-full h-[100vh] flex items-center justify-center p-6">
       <div className="w-full md:w-2/3 h-fit lg:h-full 2xl:h-5/6 py-8 lg:py-0 flex bg-primary rounded-xl overflow-hidden shadow-xl">
@@ -36,7 +59,7 @@ const Login = () => {
               <TbSocial />
             </div>
             <span className="text-2xl text-[#065ad8] font-semibold">
-              ShareFun
+              Dev-Social
             </span>
           </div>
 
@@ -47,7 +70,7 @@ const Login = () => {
 
           <form
             className="py-8 flex flex-col gap-5="
-            onSubmit={handleSubmit(onSubmit)}
+            onSubmit={handleSubmit(manageSubmit)}
           >
             <TextInput
               name="email"

@@ -6,7 +6,7 @@ const commentSchema = new mongoose.Schema(
     postId: { type: Schema.Types.ObjectId, ref: "Posts" },
     comment: { type: String, required: true },
     from: { type: String, required: true },
-    repies: [
+    replies: [
       {
         rid: { type: mongoose.Schema.Types.ObjectId },
         userId: { type: Schema.Types.ObjectId, ref: "users" },

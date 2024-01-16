@@ -1,4 +1,5 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { Dispatch, createSlice } from "@reduxjs/toolkit";
+import { SetStateAction } from "react";
 
 const initialState = {
   posts: {},
@@ -16,8 +17,8 @@ const postSlice = createSlice({
 
 export default postSlice.reducer;
 
-export function SetPosts(post) {
-  return (dispatch, getState) => {
+export function SetPosts<T>(post: T) {
+  return (dispatch: Dispatch, getState: SetStateAction<Dispatch>) => {
     dispatch(postSlice.actions.getPosts(post));
   };
 }

@@ -7,7 +7,7 @@ const postSchema = new mongoose.Schema(
     image: { type: String },
     friends: { type: String },
     likes: [{ type: String }],
-    commets: [{ type: Schema.Types.ObjectId, ref: "Comments" }],
+    comments: [{ type: Schema.Types.ObjectId, ref: "Comments" }],
   },
   {
     timestamps: true,

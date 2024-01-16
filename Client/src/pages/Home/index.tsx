@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import {
   CustomButton,
@@ -16,14 +16,15 @@ import NoProfile from "../../assets/userprofile.png";
 import { BsFiletypeGif, BsPersonFillAdd } from "react-icons/bs";
 import { BiImages, BiSolidVideo } from "react-icons/bi";
 import { useForm } from "react-hook-form";
+import { apiRequest, handleFileUpload } from "../../utils";
 
-type User = any
+type User = any;
 
 const Home = () => {
-  const { user, edit } = useSelector((state:User) => state.user);
+  const { user, edit } = useSelector((state: User) => state.user);
   const [friendRequest, setFriendRequest] = useState(requests);
   const [suggestedFriends, setSuggestedFriends] = useState(suggest);
-  const [errMsg, setErrMsg] = useState<{message:string, status:string}>();
+  const [errMsg, setErrMsg] = useState<{ message?: string; status?: string }>();
   const [file, setFile] = useState<any>(null);
   const [posting, setPosting] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -31,10 +32,59 @@ const Home = () => {
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm();
 
-  const handlePostSubmit = async () => {};
+  const handlePostSubmit = async (data:any) => {
+    setPosting(true)
+    setErrMsg({message:""});
+    try {
+      const uri = file && (await handleFileUpload(file));
+      const newData = uri ? { ...data, image: uri} : data;
+
+      const res = await apiRequest({
+        url: "/posts/create-post", 
+        token: user?.token,
+        data: newData,
+        method: "POST",    
+    });
+
+    if(res?.status === "failed") {
+      setErrMsg(res);
+  }else{
+    reset({
+      description: "",
+    });
+    setFile(null);
+    setErrMsg({message:""});
+    await fetchPost();
+  }
+  setPosting(false);
+    } catch (error) {
+      
+    }
+  };
+
+  const fetchPost = async () => {};
+  const handleLikePost = async () => {};
+  const handleDelete = async () => {};
+  const fetchFriendRequests = async () => {};
+  const fetchSuggestedFriends = async () => {};
+  const handleFriendRequests = async () => {};
+  const acceptFriendRequests = async () => {};
+  const getUser = async () => {};
+
+useEffect(() => {
+  setLoading(true);
+  getUser();
+  fetchPost();
+  fetchFriendRequests();
+  fetchSuggestedFriends();
+}, [])
+
+
+
 
   return (
     <>
@@ -90,7 +140,7 @@ const Home = () => {
                 >
                   <input
                     type="file"
-                    onChange={(e:any) => setFile(e.target.files[0])}
+                    onChange={(e: any) => setFile(e.target.files[0])}
                     className="hidden"
                     id="imgUpload"
                     data-max-size="5120"
@@ -107,7 +157,7 @@ const Home = () => {
                   <input
                     type="file"
                     data-max-size="5120"
-                    onChange={(e:any) => setFile(e.target.files[0])}
+                    onChange={(e: any) => setFile(e.target.files[0])}
                     className="hidden"
                     id="videoUpload"
                     accept=".mp4, .wav"
@@ -123,7 +173,7 @@ const Home = () => {
                   <input
                     type="file"
                     data-max-size="5120"
-                    onChange={(e:any) => setFile(e.target.files[0])}
+                    onChange={(e: any) => setFile(e.target.files[0])}
                     className="hidden"
                     id="vgifUpload"
                     accept=".gif"

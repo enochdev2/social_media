@@ -162,7 +162,7 @@ export const changePassword = async (req, res, next) => {
   }
 };
 
-
+//user
 export const getUser = async (req, res, next) => {
   try {
     const { userId } = req.body.user;

@@ -18,6 +18,5 @@ export interface Comment {
     createdAt: Date,
     comment: string,
     likes: any
-    // _id: string | number,
    
 }

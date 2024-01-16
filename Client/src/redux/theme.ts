@@ -1,7 +1,7 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { Dispatch, createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  theme: JSON.parse(window?.localStorage.getItem("theme")) ?? "dark",
+  theme: JSON.parse(window?.localStorage.getItem("theme") as any) ?? "dark",
 };
 
 const themeSlice = createSlice({
@@ -17,8 +17,8 @@ const themeSlice = createSlice({
 
 export default themeSlice.reducer;
 
-export function SetTheme(value) {
-  return (dispatch) => {
+export function SetTheme(value:string) {
+  return (dispatch:Dispatch) => {
     dispatch(themeSlice.actions.setTheme(value));
   };
 }
