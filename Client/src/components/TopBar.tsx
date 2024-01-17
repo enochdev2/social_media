@@ -9,6 +9,7 @@ import { IoMdNotificationsOutline } from "react-icons/io";
 import { SetTheme } from "../redux/theme";
 import { Logout } from "../redux/userSlice";
 import { UnknownAction } from "@reduxjs/toolkit";
+import { fetcchPosts } from "../utils";
 
 type State = any
 
@@ -28,7 +29,9 @@ const TopBar = () => {
     dispatch(SetTheme(themeValue) as any);
   };
 
-  const handleSearch = async (data:any) => {};
+  const handleSearch = async (data:any) => {
+    fetcchPosts(user.token, dispatch, "", data)
+  };
 
   return (
     <div className='topbar w-full flex items-center justify-between py-3 md:py-6 px-4 bg-primary'>
