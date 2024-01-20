@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { useForm } from "react-hook-form";
-import { TbSocial } from "react-icons/tb";
+import { TiSocialLastFm } from "react-icons/ti";
 import { BsShare } from "react-icons/bs";
 import { AiOutlineInteraction } from "react-icons/ai";
 import { ImConnection } from "react-icons/im";
@@ -58,10 +58,10 @@ setIsSubmitting(false);
         <div className="w-full lg:w-1/2 h-full p-10 2xl:px-20 flex flex-col justify-center ">
           <div className="w-full flex gap-2 items-center mb-6">
             <div className="p-2 bg-[#065ad8] rounded text-white">
-              <TbSocial />
+            <TiSocialLastFm />
             </div>
             <span className="text-2xl text-[#065ad8]  font-semibold">
-              ShareFun
+              Dev-social
             </span>
           </div>
 
