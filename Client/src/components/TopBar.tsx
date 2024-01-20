@@ -39,7 +39,7 @@ const TopBar = () => {
         <TiSocialLastFm />
         </div>
         <span className='text-xl md:text-2xl text-[#065ad8] font-semibold'>
-          ShareFun
+          Dev-Social
         </span>
       </Link>
 
