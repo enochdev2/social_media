@@ -23,8 +23,8 @@ const UserSchema = new mongoose.Schema(
     location: { type: String },
     profileurl: { type: String },
     profession: { type: String },
-    friends: { type: String },
-    views: { type: String },
+    friends: [{ type: Schema.Types.ObjectId, ref: "Users" }],
+    views: [{ type: String }],
     verified: { type: Boolean, default: false },
   },
   {
