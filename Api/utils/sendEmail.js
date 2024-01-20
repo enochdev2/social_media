@@ -10,10 +10,18 @@ dotenv.config();
 const { AUTH_EMAIL, AUTH_PASSWORD, APP_URL } = process.env;
 
 let transporter = nodemailer.createTransport({
-  host: "smtp.mail.outlook.com",
+  // host: "smtp.gmail.com",
+  service: "gmail",
+  // port: 587,
+  // secure: false,
   auth: {
+    // type: 'OAuth2',
     user: AUTH_EMAIL,
     pass: AUTH_PASSWORD,
+    // clientId: '000000000000-xxx0.apps.googleusercontent.com',
+    // clientSecret: 'XxxxxXXxX0xxxxxxxx0XXxX0',
+    // refreshToken: '1/XXxXxsss-xxxXXXXXxXxx0XXXxxXXx0x00xxx',
+    // accessToken: 'ya29.Xx_XX0xxxxx-xX0X0XxXXxXxXXXxX0x'
   },
 });
 
@@ -66,7 +74,7 @@ export const sendVerificationEmail = async (user, res) => {
           res.status(201).send({
             success: "PENDING",
             message:
-              "verification email has been sent to your account. Check your email for further instructional.",
+              "Verification email has been sent to your account. Check your email for further instructions.",
           });
         })
         .catch((err) => {

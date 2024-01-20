@@ -4,13 +4,7 @@ import { sendVerificationEmail } from "../utils/sendEmail.js";
 
 export const register = async (req, res, next) => {
   const { firstName, lastName, email, password } = req.body;
-  console.log(
-    "🚀 ~ register ~ irstName, lastName, email, password:",
-    firstName,
-    lastName,
-    email,
-    password
-  );
+ 
 
   if (!(firstName || lastName || email || password)) {
     next("Provide Required Fields");
@@ -24,14 +18,14 @@ export const register = async (req, res, next) => {
 
     const hashedPassword = await hassString(password);
 
-    const newUser = new Users({
+    const user = new Users({
       firstName,
       lastName,
       email,
       password: hashedPassword,
     });
 
-    sendVerificationEmail(newUser, res);
+    sendVerificationEmail(user, res);
   } catch (error) {
     console.log(error);
     res.status(404).json({ message: error.message });
