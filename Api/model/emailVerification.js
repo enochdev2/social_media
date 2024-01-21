@@ -5,7 +5,7 @@ const emailVerificationSchema = new mongoose.Schema(
     userId: String,
     token: String,
     createdAt: Date,
-    expireAt: Date,
+    expiresAt: Date,
   },
   {
     timestamps: true,

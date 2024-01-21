@@ -4,18 +4,18 @@ import cors from "cors";
 import morgan from "morgan";
 import bodyParser from "body-parser";
 import path from "path";
-//security packages
 import helmet from "helmet";
 import { db } from "./lib/index.js";
 import errorMiddleWare from "./middleware/middleware.js";
 import router from "./routes/index.js";
 
-const _dirname = path.resolve(path.dirname(""));
+const __dirname = path.resolve(path.dirname(""));
 
 dotenv.config();
 const app = express();
 
-app.use(express.static(path.join(_dirname, "views/build")));
+app.use(express.static(path.join(__dirname, "views/build")));
+
 await db();
 
 const PORT = process.env.port || 4000;
@@ -29,6 +29,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(morgan("dev"));
 app.use(router);
+
 app.use(errorMiddleWare);
 
 app.listen(PORT, () => {

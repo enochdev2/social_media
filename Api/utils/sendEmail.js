@@ -10,18 +10,11 @@ dotenv.config();
 const { AUTH_EMAIL, AUTH_PASSWORD, APP_URL } = process.env;
 
 let transporter = nodemailer.createTransport({
-  // host: "smtp.gmail.com",
   service: "gmail",
-  // port: 587,
-  // secure: false,
+  host: "smtp.gmail.com",
   auth: {
-    // type: 'OAuth2',
     user: AUTH_EMAIL,
     pass: AUTH_PASSWORD,
-    // clientId: '000000000000-xxx0.apps.googleusercontent.com',
-    // clientSecret: 'XxxxxXXxX0xxxxxxxx0XXxX0',
-    // refreshToken: '1/XXxXxsss-xxxXXXXXxXxx0XXXxxXXx0x00xxx',
-    // accessToken: 'ya29.Xx_XX0xxxxx-xX0X0XxXXxXxXXXxX0x'
   },
 });
 

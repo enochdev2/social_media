@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 import verification from "../model/emailVerification.js";
 import Users from "../model/UserModel.js";
 import PasswordReset from "../model/PasswordReset.js";
-import { compareString,jwtSignIn, hassString } from "../utils/index.js";
+import { compareString, jwtSignIn, hassString } from "../utils/index.js";
 import { resetPasswordLink } from "../utils/sendEmail.js";
 
 export const verifyEmail = async (req, res) => {
@@ -10,21 +10,25 @@ export const verifyEmail = async (req, res) => {
 
   try {
     const result = await verification.findOne({ userId });
+
     if (result) {
       const { expiresAt, token: hashedToken } = result;
 
       if (expiresAt < Date.now()) {
-        verification
-          .findOneAndDelete({ userId })
+        verification.findOneAndDelete({ userId })
           .then(() => {
-            Users.findOneAndDelete({ _id: userId });
+            Users.findOneAndDelete({ _id: userId })
+              .then(() => {
+                const message = "Verification token has expired.";
+                res.redirect(`/users/verified?status=error&message=${message}`);
+              })
+              .catch((err) => {
+                res.redirect(`/users/verified?status=error&message=`);
+              });
           })
-          .then(() => {
-            const message = "verification token has expired";
-            res.redirect(`/users/verified?status=error&message=${message}`);
-          })
-          .catch((err) => {
-            res.redirect(`/users/verified?status=error&message=`);
+          .catch((error) => {
+            console.log(error);
+            res.redirect(`/users/verified?message=`);
           });
       } else {
         compareString(token, hashedToken)
@@ -35,114 +39,107 @@ export const verifyEmail = async (req, res) => {
                   verification.findOneAndDelete({ userId }).then(() => {
                     const message = "Email verified successfully";
                     res.redirect(
-                      `users/verified?status=success&message=${message}`
+                      `/users/verified?status=success&message=${message}`
                     );
                   });
                 })
-                .catch((error) => {
-                  console.log(error);
-                  const message = "verification failed or link is invalid";
+                .catch((err) => {
+                  console.log(err);
+                  const message = "Verification failed or link is invalid";
                   res.redirect(
                     `/users/verified?status=error&message=${message}`
                   );
                 });
             } else {
-              const message = "verification failed or link is invalid";
+              const message = "Verification failed or link is invalid";
               res.redirect(`/users/verified?status=error&message=${message}`);
             }
           })
-          .catch((error) => {
-            console.log(error);
-            res.status(404).json({ message: error.message });
+          .catch((err) => {
+            console.log(err);
+            res.redirect(`/users/verified?message=`);
           });
       }
     } else {
-      const message = "Invalid verification link try again later.";
+      const message = "Invalid verification link. Try again later.";
       res.redirect(`/users/verified?status=error&message=${message}`);
     }
   } catch (error) {
-    console.log(error);
-    res.redirect(`/users/verified?message=`)
+    console.log(err);
+    res.redirect(`/users/verified?message=`);
   }
 };
 
 export const requestPasswordReset = async () => {
-  
   try {
-    const {email} = req.body;
-    const user = await  Users.findOne({email});
+    const { email } = req.body;
+    const user = await Users.findOne({ email });
 
-    if(!user){
+    if (!user) {
       return res.status(404).json({
         status: "Failed",
-        message: "Email address not found"
-      })
+        message: "Email address not found",
+      });
     }
 
-    const existingRequest = await PasswordReset.findOne({email});
-    if(existingRequest) {
-      if(existingRequest.expiresAt > Date.now()){
+    const existingRequest = await PasswordReset.findOne({ email });
+    if (existingRequest) {
+      if (existingRequest.expiresAt > Date.now()) {
         return res.status(201).json({
           status: "PENDING",
           message: "Reset password link has already been sent to you email.",
         });
       }
-      await PasswordReset.findOneAndDelete({email});
+      await PasswordReset.findOneAndDelete({ email });
     }
-    await resetPasswordLink(user,res)
-
+    await resetPasswordLink(user, res);
   } catch (error) {
     console.log(error);
     res.status(404).json({ message: error.message });
   }
-
-}
-
+};
 
 export const resetPassword = async (req, res) => {
-  const {userId, token} = req.params;
-try {
-  const user = await Users.findById(userId);
+  const { userId, token } = req.params;
+  try {
+    const user = await Users.findById(userId);
 
-  if(!user){
-    const message = "Invalid password reset link. try again";
-    res.redirect(`/users/resetpaswword?tstatus=error&message=${message}`);
-  }
-
-  const resetPassword = await PasswordReset.findOne({userId})
-
-  if(!resetPassword) {
-    const message = "Invalid password reset link. Try again";
-    res.redirect(`/users/resetpaswword?status=error&message=${message}`)
-  }
-  const {expiresAt, token: resetToken} = resetPassword;
-
-  if(expiresAt < Date.now()) {
-    const message= "Reset Password Link has expired. Please try again";
-    res.redirect(`/users/resetpassword?status=error&message${message}`)
-  }else{
-    const isMatch = await compareString(token, resetToken);
-    if(!isMatch){
-      const message = "Invalid reset password link. Please try again ";
-      res.redirect(`/users/verified?status=error&message=${message}`);
-    }else{
-      res.redirect(`/users/resetpassword?tpe=reset&id=${userId}`);
+    if (!user) {
+      const message = "Invalid password reset link. try again";
+      res.redirect(`/users/resetpaswword?tstatus=error&message=${message}`);
     }
-  }
 
-} catch (error) {
-  console.log(error);
+    const resetPassword = await PasswordReset.findOne({ userId });
+
+    if (!resetPassword) {
+      const message = "Invalid password reset link. Try again";
+      res.redirect(`/users/resetpaswword?status=error&message=${message}`);
+    }
+    const { expiresAt, token: resetToken } = resetPassword;
+
+    if (expiresAt < Date.now()) {
+      const message = "Reset Password Link has expired. Please try again";
+      res.redirect(`/users/resetpassword?status=error&message${message}`);
+    } else {
+      const isMatch = await compareString(token, resetToken);
+      if (!isMatch) {
+        const message = "Invalid reset password link. Please try again ";
+        res.redirect(`/users/verified?status=error&message=${message}`);
+      } else {
+        res.redirect(`/users/resetpassword?tpe=reset&id=${userId}`);
+      }
+    }
+  } catch (error) {
+    console.log(error);
     res.status(404).json({ message: error.message });
-}
-
-} 
-
+  }
+};
 
 export const changePassword = async (req, res, next) => {
   try {
     const { userId, password } = req.body;
 
-    const hashedpassword = await hashString(password);
+    const hashedpassword = await hassString(password);
 
     const user = await Users.findByIdAndUpdate(
       { _id: userId },
@@ -220,7 +217,7 @@ export const updateUser = async (req, res, next) => {
     });
 
     await user.populate({ path: "friends", select: "-password" });
-    const token = createJWT(user?._id);
+    const token = jwtSignIn(user?._id);
 
     user.password = undefined;
 
@@ -408,4 +405,3 @@ export const suggestedFriends = async (req, res) => {
     res.status(404).json({ message: error.message });
   }
 };
-

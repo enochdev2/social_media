@@ -21,7 +21,7 @@ const _dirname = path.resolve(path.dirname(""));
 router.get("/verify/:userId/:token", verifyEmail);
 // PASSWORD RESET
 router.post("/request-passwordreset", requestPasswordReset);
-router.get("/reset.password/:userId/:token", resetPassword);
+router.get("/reset.password/:id/:token", resetPassword);
 router.post("/reset-password", changePassword);
 
 // user routes

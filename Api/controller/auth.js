@@ -45,6 +45,7 @@ export const login = async (req, res, next) => {
       path: "friends",
       select: "firstNaem LastNaem location profileUrl password",
     });
+    console.log("🚀 ~ user ~ user:", user)
 
     if (!user) {
       next("Invalid email or password");
