@@ -26,7 +26,7 @@ const Login = () => {
     mode: "onChange",
   });
 
-  const manageSubmit = async (data: any) => {
+  const onSubmit = async (data: any) => {
     setIsSubmitting(true);
     try {
       const res = await apiRequest({
@@ -34,11 +34,12 @@ const Login = () => {
         method: "POST",
         data: data,
       });
-      if (res?.status === "failed") {
+      if (res?.status == "201") {
         setErrMsg(res);
       } else {
-        setErrMsg("");
+        setErrMsg(res.message);
         const newData = { token: res?.token, ...res?.user };
+        
         dispatch(UserLogin(newData) as any);
         window.location.replace("/");
       }
@@ -56,7 +57,7 @@ const Login = () => {
         <div className="w-full lg:w-1/2 h-full p-10 2xl:px-20 flex flex-col justify-center ">
           <div className="w-full flex gap-2 items-center mb-6">
             <div className="p-2 bg-[#065ad8] rounded text-white">
-            <TiSocialLastFm />
+              <TiSocialLastFm />
             </div>
             <span className="text-2xl text-[#065ad8] font-semibold">
               Dev-Social
@@ -70,7 +71,7 @@ const Login = () => {
 
           <form
             className="py-8 flex flex-col gap-5="
-            onSubmit={handleSubmit(manageSubmit)}
+            onSubmit={handleSubmit(onSubmit)}
           >
             <TextInput
               name="email"

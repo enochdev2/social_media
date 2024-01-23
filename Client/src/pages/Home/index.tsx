@@ -44,7 +44,7 @@ const Home = () => {
     setErrMsg({message:""});
     try {
       const uri = file && (await handleFileUpload(file));
-      const newData = uri ? { ...data, image: uri} : data;
+      const newData = uri ? { ...data, image: uri, friends:""} : {...data, image:'', friends:''};
 
       const res = await apiRequest({
         url: "/posts/create-post", 
@@ -72,6 +72,7 @@ const Home = () => {
 
   const fetchPost = async () => {
     await fetcchPosts(user?.token, dispatch)
+    setLoading(false);
   };
   const handleLikePost = async (uri:string) => {
     await likePosts(uri,user?.token);
@@ -81,6 +82,7 @@ const Home = () => {
   const handleDelete = async (id: string ) => {
     await  deletePosts(id, user.token);
     await fetchPost();
+
   };
 
   const fetchFriendRequests = async () => {
@@ -149,10 +151,10 @@ const Home = () => {
 
 useEffect(() => {
   setLoading(true);
-  getUser();
+  // getUser();
   fetchPost();
-  fetchFriendRequests();
-  fetchSuggestedFriends();
+  // fetchFriendRequests();
+  // fetchSuggestedFriends();
 }, [])
 
 

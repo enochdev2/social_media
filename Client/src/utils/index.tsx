@@ -15,13 +15,13 @@ import { Dispatch } from "@reduxjs/toolkit";
         const results = await Api(url,{
             method: method || "GET",
             data: data, 
-            Headers: {
+            headers: {
                 "content-type": "application/json",
                 Authorization: token ? `Bearer ${token}` : " ",
             }
         });
         return results?.data;
-    } catch(error:Error) {
+    } catch(error:any) {
      const err = error.reesponse.data ;
      console.log(err);
      return {status: err.success, message: err.message };
@@ -44,12 +44,13 @@ import { Dispatch } from "@reduxjs/toolkit";
 
 
  export const fetcchPosts = async(token?:string, dispatch?: Dispatch | any, uri?:string, data?:any)=>{
+    const datas = data ? data : {}
     try {
         const res = await apiRequest({
             url: uri || "/posts", 
             token: token,
             method: "POST",
-            data: data || {},
+            data: datas,
         });
         dispatch(SetPosts(res?.data)as any);
         return;

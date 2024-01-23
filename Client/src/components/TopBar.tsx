@@ -44,7 +44,7 @@ const TopBar = () => {
       </Link>
 
       <form
-        className="hidden md:flex items-center justify-center"
+        className="hidden md:flex items-center justify-center mr-3"
         onSubmit={handleSubmit(handleSearch)}
       >
         <TextInput

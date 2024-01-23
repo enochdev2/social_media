@@ -5,19 +5,22 @@ import Users from "../model/UserModel.js";
 export const createPost = async (req, res, next) => {
   try {
     const { userId } = req.body.user;
-    const { description, image } = req.body;
+    const { description, image,friends } = req.body;
+    console.log("🚀 ~ createPost ~ description:", description)
 
     if (!description) {
       next("You must provide a description");
       return;
     }
 
-    const post = await Posts.create({
+    const post = new Posts({
       userId,
       description,
       image,
+      friends,
     });
-
+    console.log("🚀 ~ createPost ~ post:", post)
+    await post.save();
     res.status(200).json({
       sucess: true,
       message: "Post created successfully",
@@ -34,45 +37,48 @@ export const getPosts = async (req, res, next) => {
     const { userId } = req.body.user;
     const { search } = req.body;
 
-    const user = await Users.findById(userId);
-    const friends = user?.friends?.toString().split(",") ?? [];
-    friends.push(userId);
+    // const user = await Users.findById(userId);
+    // const friends = user?.friends?.toString().split(",") ?? [];
+    // friends.push(userId);
 
-    const searchPostQuery = {
-      $or: [
-        {
-          description: { $regex: search, $options: "i" },
-        },
-      ],
-    };
+    // const searchPostQuery = {
+    //   $or: [
+    //     {
+    //       description: { $regex: search, $options: "i" },
+    //     },
+    //   ],
+    // };
 
-    const posts = await Posts.find(search ? searchPostQuery : {})
-      .populate({
-        path: "userId",
-        select: "firstName lastName location profileUrl -password",
-      })
-      .sort({ _id: -1 });
+    // const posts = await Posts.find(search ? searchPostQuery : {})
+    // const findes = search ? searchPostQuery : {}
+    const posts = await Posts.find()
+    // .populate({
+    //     path: "userId",
+    //     select: "firstName lastName location profileUrl -password",
+    //   })
+    //   .sort({ _id: -1 });
 
-    const friendsPosts = posts?.filter((post) => {
-      return friends.includes(post?.userId?._id.toString());
-    });
+    // const friendsPosts = posts?.filter((post) => {
+    //   return friends.includes(post?.userId?._id.toString());
+    // });
 
-    const otherPosts = posts?.filter(
-      (post) => !friends.includes(post?.userId?._id.toString())
-    );
+    // const otherPosts = posts?.filter(
+    //   (post) => !friends.includes(post?.userId?._id.toString())
+    // );
 
-    let postsRes = null;
+    // let postsRes = null;
 
-    if (friendsPosts?.length > 0) {
-      postsRes = search ? friendsPosts : [...friendsPosts, ...otherPosts];
-    } else {
-      postsRes = posts;
-    }
+    // if (friendsPosts?.length > 0) {
+    //   postsRes = search ? friendsPosts : [...friendsPosts, ...otherPosts];
+    // } else {
+    //   postsRes = posts;
+    // }
 
     res.status(200).json({
       sucess: true,
       message: "successfully",
-      data: postsRes,
+      data: posts 
+      // postsRes
     });
   } catch (error) {
     console.log(error);

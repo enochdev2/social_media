@@ -8,10 +8,10 @@ export const hassString = async (useValue) =>{
 
 }
 
-export const compareString = async (oldValue,userValue) =>{
+export const compareString = async (oldValue, userValue) =>{
 
-   const compareString = await bcrypt.compare(oldValue, userValue);
-   return compareString;
+   const compareStrings = await bcrypt.compare(oldValue, userValue);
+   return compareStrings;
 
 };
 
