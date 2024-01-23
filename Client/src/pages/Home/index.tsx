@@ -117,6 +117,8 @@ const Home = () => {
     try {
       const res = await sendFriendRequest(user.token, id)
       await fetchSuggestedFriends();
+      console.log(res.message);
+      
      } catch (error) {
       console.log(error);   
      }
@@ -151,10 +153,10 @@ const Home = () => {
 
 useEffect(() => {
   setLoading(true);
-  // getUser();
+  getUser();
   fetchPost();
-  // fetchFriendRequests();
-  // fetchSuggestedFriends();
+  fetchFriendRequests();
+  fetchSuggestedFriends();
 }, [])
 
 

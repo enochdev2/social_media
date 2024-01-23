@@ -128,11 +128,8 @@ export const getUserPost = async (req, res, next) => {
   try {
     const { id } = req.params;
 
-    const post = await Posts.find({ userId: id })
-      .populate({
-        path: "userId",
-        select: "firstName lastName location profileUrl -password",
-      })
+    const post = await Posts.find({ userId: id }, {userId:1})
+      .populate("userId")
       .sort({ _id: -1 });
 
     res.status(200).json({

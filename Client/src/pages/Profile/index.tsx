@@ -27,13 +27,14 @@ const uri = "/posts/get-user-post/" + id;
   };
 
   const getPosts = async () => {
-     await fetcchPosts(user.token, dispatch, uri);
+     await fetcchPosts(user?.token, dispatch, uri);
      setLoading(false);
   }
 
   const handleDelete = async (id:string) => {
-    await  deletePosts(id, user.token);
+    await  deletePosts(id, user?.token);
     await getPosts();
+    window.location.reload();
   };
 
   const handleLikePost = async(uri:string) => {

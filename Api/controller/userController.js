@@ -4,6 +4,7 @@ import Users from "../model/UserModel.js";
 import PasswordReset from "../model/PasswordReset.js";
 import { compareString, jwtSignIn, hassString } from "../utils/index.js";
 import { resetPasswordLink } from "../utils/sendEmail.js";
+import FriendRequest from "../model/FriendMolel.js";
 
 export const verifyEmail = async (req, res) => {
   const { userId, token } = req.params;
@@ -286,10 +287,7 @@ export const getFriendRequest = async (req, res) => {
       requestTo: userId,
       requestStatus: "Pending",
     })
-      .populate({
-        path: "requestFrom",
-        select: "firstName lastName profileUrl profession -password",
-      })
+      .populate("requestFrom").select("-password")
       .limit(10)
       .sort({
         _id: -1,
@@ -391,8 +389,7 @@ export const suggestedFriends = async (req, res) => {
     queryObject.friends = { $nin: userId };
 
     let queryResult = Users.find(queryObject)
-      .limit(15)
-      .select("firstName lastName profileUrl profession -password");
+      .limit(15).select("-password");
 
     const suggestedFriends = await queryResult;
 

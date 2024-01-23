@@ -7,7 +7,7 @@ import Register from "./pages/Auth/register"
 import ResetPassword from "./pages/ResetPassword";
 
 function Layout() {
-  const { user } = useSelector((state) => state.user);
+  const { user } = useSelector((state:any) => state.user);
   const location = useLocation();
 
   return user?.token ? (

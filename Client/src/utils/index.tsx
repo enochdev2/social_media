@@ -75,10 +75,11 @@ import { Dispatch } from "@reduxjs/toolkit";
     }
 
  }
- export const deletePosts = async(token:string, uri:string, )=>{
+ export const deletePosts = async( id:string, token:string, )=>{
     try {
+        console.log("🚀 ~ deletePosts ~ id:", id)
         const res = await apiRequest({
-            url: "posts/" + uri, 
+            url: "posts/" + id, 
             token: token,
             method: "DELETE",    
         });
@@ -91,7 +92,7 @@ import { Dispatch } from "@reduxjs/toolkit";
 
  }
 
- export const getUserInfo = async(token:string, id?:string | number, )=>{
+ export const getUserInfo = async(token?:string, id?:string | number, )=>{
     try {
         const uri = id === undefined ? "/users/get-user" : "/users/get-user/" + id;
         const res = await apiRequest({
@@ -136,7 +137,7 @@ import { Dispatch } from "@reduxjs/toolkit";
             url: "/users/friend-request", 
             token: token,
             method: "POST",
-            data: {requesTo: id}    
+            data: {requestTo: id}    
         });
 
         return res;
