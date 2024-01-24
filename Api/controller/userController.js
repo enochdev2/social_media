@@ -10,33 +10,33 @@ export const verifyEmail = async (req, res) => {
   const { userId, token } = req.params;
 
   try {
-    const result = await verification.findOne({ userId });
+    const result = await Verification.findOne({ userId });
 
     if (result) {
       const { expiresAt, token: hashedToken } = result;
 
       if (expiresAt < Date.now()) {
         verification.findOneAndDelete({ userId })
-          .then(() => {
-            Users.findOneAndDelete({ _id: userId })
-              .then(() => {
-                const message = "Verification token has expired.";
-                res.redirect(`/users/verified?status=error&message=${message}`);
-              })
-              .catch((err) => {
-                res.redirect(`/users/verified?status=error&message=`);
-              });
-          })
-          .catch((error) => {
-            console.log(error);
-            res.redirect(`/users/verified?message=`);
-          });
-      } else {
+        .then(() => {
+          Users.findOneAndDelete({ _id: userId })
+            .then(() => {
+              const message = "Verification token has expired.";
+              res.redirect(`/users/verified?status=error&message=${message}`);
+            })
+            .catch((err) => {
+              res.redirect(`/users/verified?status=error&message=`);
+            });
+        })
+        .catch((error) => {
+          console.log(error);
+          res.redirect(`/users/verified?message=`);
+        });
+    } else {
         compareString(token, hashedToken)
-          .then((isMatch) => {
-            if (isMatch) {
-              Users.findOneAndUpdate({ _id: userId }, { verified: true })
-                .then(() => {
+        .then((isMatch) => {
+          if (isMatch) {
+            Users.findOneAndUpdate({ _id: userId }, { verified: true })
+              .then(() => {
                   verification.findOneAndDelete({ userId }).then(() => {
                     const message = "Email verified successfully";
                     res.redirect(

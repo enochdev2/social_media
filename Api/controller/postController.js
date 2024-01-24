@@ -6,7 +6,6 @@ export const createPost = async (req, res, next) => {
   try {
     const { userId } = req.body.user;
     const { description, image,friends } = req.body;
-    console.log("🚀 ~ createPost ~ description:", description)
 
     if (!description) {
       next("You must provide a description");
@@ -19,7 +18,6 @@ export const createPost = async (req, res, next) => {
       image,
       friends,
     });
-    console.log("🚀 ~ createPost ~ post:", post)
     await post.save();
     res.status(200).json({
       sucess: true,
@@ -37,48 +35,41 @@ export const getPosts = async (req, res, next) => {
     const { userId } = req.body.user;
     const { search } = req.body;
 
-    // const user = await Users.findById(userId);
-    // const friends = user?.friends?.toString().split(",") ?? [];
-    // friends.push(userId);
+    const user = await Users.findById(userId);
+    const friends = user?.friends?.toString().split(",") ?? [];
+    friends.push(userId);
 
-    // const searchPostQuery = {
-    //   $or: [
-    //     {
-    //       description: { $regex: search, $options: "i" },
-    //     },
-    //   ],
-    // };
+    const searchPostQuery = {
+      $or: [
+        {
+          description: { $regex: search, $options: "i" },
+        },
+      ],
+    };
 
-    // const posts = await Posts.find(search ? searchPostQuery : {})
-    // const findes = search ? searchPostQuery : {}
-    const posts = await Posts.find()
-    // .populate({
-    //     path: "userId",
-    //     select: "firstName lastName location profileUrl -password",
-    //   })
-    //   .sort({ _id: -1 });
+    const posts = await Posts.find(search ? searchPostQuery : {})
+    .populate('userId').select("-password").sort({ _id: -1 });
+    
 
-    // const friendsPosts = posts?.filter((post) => {
-    //   return friends.includes(post?.userId?._id.toString());
-    // });
+    const friendsPosts = posts?.filter((post) => {
+      return friends.includes(post?.userId?._id.toString());
+    });
 
-    // const otherPosts = posts?.filter(
-    //   (post) => !friends.includes(post?.userId?._id.toString())
-    // );
+    const otherPosts = posts?.filter(
+      (post) => !friends.includes(post?.userId?._id.toString())
+    );
 
-    // let postsRes = null;
+    let postsRes = null;
 
-    // if (friendsPosts?.length > 0) {
-    //   postsRes = search ? friendsPosts : [...friendsPosts, ...otherPosts];
-    // } else {
-    //   postsRes = posts;
-    // }
-
+    if (friendsPosts?.length > 0) {
+      postsRes = search ? friendsPosts : [...friendsPosts, ...otherPosts];
+    } else {
+      postsRes = posts;
+    }
     res.status(200).json({
       sucess: true,
       message: "successfully",
-      data: posts 
-      // postsRes
+      data: postsRes
     });
   } catch (error) {
     console.log(error);
@@ -91,27 +82,28 @@ export const getPost = async (req, res, next) => {
     const { id } = req.params;
 
     const post = await Posts.findById(id)
-      .populate({
-        path: "userId",
-        select: "firstName lastName location profileUrl -password",
-      })
-      .populate({
-        path: "comments",
-        populate: {
-          path: "userId",
-          select: "firstName lastName location profileUrl -password",
-        },
-        options: {
-          sort: "-_id",
-        },
-      })
-      .populate({
-        path: "comments",
-        populate: {
-          path: "replies.userId",
-          select: "firstName lastName location profileUrl -password",
-        },
-      });
+      // .populate({
+      //   path: "userId",
+      //   select: "-password",
+      // })
+      // .populate({
+      //   path: "comments",
+      //   populate: {
+      //     path: "userId",
+      //     select: "firstName lastName location profileUrl -password",
+      //   },
+      //   options: {
+      //     sort: "-_id",
+      //   },
+      // })
+      // .populate({
+      //   path: "comments",
+      //   populate: {
+      //     path: "replies.userId",
+      //     select: "firstName lastName location profileUrl -password",
+      //   },
+      // });
+    console.log("🚀 ~ getPost ~ post:", post)
 
     res.status(200).json({
       sucess: true,
@@ -128,8 +120,7 @@ export const getUserPost = async (req, res, next) => {
   try {
     const { id } = req.params;
 
-    const post = await Posts.find({ userId: id }, {userId:1})
-      .populate("userId")
+    const post = await Posts.find({ userId: id }).populate("userId")
       .sort({ _id: -1 });
 
     res.status(200).json({

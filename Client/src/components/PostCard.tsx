@@ -202,6 +202,7 @@ const PostCard = ({ post, user, deletePost, likePost }: any) => {
             <Link to={"/profile/" + post?.userId?._id}>
               <p className="font-medium text-lg text-ascent-1">
                 {post?.userId?.firstName} {post?.userId?.lastName}
+
               </p>
             </Link>
             <span className="text-ascent-2">{post?.userId?.location}</span>
@@ -218,12 +219,11 @@ const PostCard = ({ post, user, deletePost, likePost }: any) => {
 
       <div>
         <p className="text-ascent-2">
-          {post?.description}
            {showAll === post?._id
             ? post?.description
             : post?.description} 
 
-          {post?.description?.length > 301 &&
+          {post?.description?.length > 101 &&
             (showAll === post?._id ? (
               <span
                 className="text-blue ml-2 font-mediu cursor-pointer"

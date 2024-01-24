@@ -29,6 +29,8 @@ const TopBar = () => {
   };
 
   const handleSearch = async (data: any) => {
+    console.log("new");
+    
     fetcchPosts(user.token, dispatch, "", data);
   };
 
