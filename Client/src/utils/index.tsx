@@ -60,7 +60,7 @@ import { Dispatch } from "@reduxjs/toolkit";
     }
 
  }
- export const likePosts = async(token:string, uri:string )=>{
+ export const likePosts = async(uri:string, token:string,  )=>{
     try {
         const res = await apiRequest({
             url: uri, 
