@@ -138,16 +138,17 @@ export const getComments = async (req, res, next) => {
   try {
     const { postId } = req.params;
 
-    const postComments = await Comments.find({ postId })
-      .populate({
-        path: "userId",
-        select: "firstName lastName location profileUrl -password",
-      })
-      .populate({
-        path: "replies.userId",
-        select: "firstName lastName location profileUrl -password",
-      })
-      .sort({ _id: -1 });
+    const postComments = await Comments.find({ postId }).populate("userId").select("-password").populate("replies.userId").select("-password").sort({ _id: -1 });
+
+
+      // .populate({
+      //   path: "userId",
+      //   select: "firstName lastName location profileUrl -password",
+      // })
+      // .populate({
+      //   path: "replies.userId",
+      //   select: "firstName lastName location profileUrl -password",
+      // })
 
     res.status(200).json({
       sucess: true,

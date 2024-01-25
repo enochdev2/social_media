@@ -23,7 +23,7 @@ function App() {
 
 
   return (
-    <div data-theme={theme} className='w-full min-h-[100vh]'>
+    <div data-theme={theme} className='w-full min-h-screen overflow-y-scroll'>
     <Routes>
       <Route element={<Layout />}>
         <Route path='/' element={<Home />} />

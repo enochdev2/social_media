@@ -34,7 +34,7 @@ const Login = () => {
         method: "POST",
         data: data,
       });
-      if (res?.status == "201") {
+      if (res?.status == "401") {
         setErrMsg(res);
       } else {
         setErrMsg(res.message);

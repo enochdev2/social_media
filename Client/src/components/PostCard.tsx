@@ -11,20 +11,27 @@ import CustomButton from "./CustomButton";
 import { Comment } from "../utils/constant";
 import { apiRequest } from "../utils";
 
-const getPostComments = async (id:string) => {
-try {
-  const res = await apiRequest({
-    url: "/posts/comments" + id,
-    method: "GET",
-  });
-  return res?.data;
-} catch (error) {
-  console.log(error);
-  
-}
-}
+const getPostComments = async (id: string) => {
+  try {
+    const res = await apiRequest({
+      url: "/posts/comments/" + id,
+      method: "GET",
+    });
+    return res?.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
 
-const ReplyCard = ({ reply, user, handleLike }: {reply:any, user:any, handleLike:any }) => {
+const ReplyCard = ({
+  reply,
+  user,
+  handleLike,
+}: {
+  reply: any;
+  user: any;
+  handleLike: any;
+}) => {
   return (
     <div className="w-full py-3">
       <div className="flex gap-3 items-center mb-1">
@@ -80,16 +87,18 @@ const CommentForm = ({ user, id, replyAt, getComments }: any) => {
     mode: "onChange",
   });
 
-  const onSubmit = async (data:any) => {
+  const onSubmit = async (data: any) => {
     setLoading(true);
-    setErrMsg({message: ''})
+    setErrMsg({ message: "" });
     try {
-      const URL = !replyAt ? "/posts/comment/" + id : "/posts/reply-comment/" + id;
+      const URL = !replyAt
+        ? "/posts/comment/" + id
+        : "/posts/reply-comment/" + id;
 
       const newData = {
         comment: data?.comment,
         from: user?.firstName + " " + user?.lastName,
-        replyAt: replyAt
+        replyAt: replyAt,
       };
 
       const res = await apiRequest({
@@ -97,21 +106,20 @@ const CommentForm = ({ user, id, replyAt, getComments }: any) => {
         data: newData,
         token: user?.token,
         method: "POST",
-      })
-      if(res?.status === "failed") {
+      });
+      if (res?.status === "failed") {
         setErrMsg(res);
-
-      }else{
+      } else {
         reset({
           comment: " ",
         });
-        setErrMsg({message: ' '});
+        window.location.reload();
+        setErrMsg({ message: " " });
         await getComments();
       }
       setLoading(false);
     } catch (error) {
       console.log(error);
-      
     }
   };
 
@@ -173,17 +181,16 @@ const PostCard = ({ post, user, deletePost, likePost }: any) => {
   const [replyComments, setReplyComments] = useState(0);
   const [showComments, setShowComments] = useState(0);
 
-  const getComments = async (id:string) => {
+  const getComments = async (id: string) => {
     setReplyComments(0);
-   const result = await getPostComments(id)
+    const result = await getPostComments(id);
     setComments(result);
     setLoading(false);
   };
 
-  const handleLike = async (uri:string) => {
+  const handleLike = async (uri: string) => {
     await likePost(uri);
-    await getComments(post?._id)
-
+    await getComments(post?._id);
   };
 
   return (
@@ -202,13 +209,12 @@ const PostCard = ({ post, user, deletePost, likePost }: any) => {
             <Link to={"/profile/" + post?.userId?._id}>
               <p className="font-medium text-lg text-ascent-1">
                 {post?.userId?.firstName} {post?.userId?.lastName}
-
               </p>
             </Link>
             <span className="text-ascent-2">{post?.userId?.location}</span>
             <span className="md:hidden flex text-ascent-2 text-xs">
-            {moment(post?.createdAt ?? "2023-05-25").fromNow()}
-          </span>
+              {moment(post?.createdAt ?? "2023-05-25").fromNow()}
+            </span>
           </div>
 
           <span className="hidden md:flex text-ascent-2">
@@ -219,9 +225,7 @@ const PostCard = ({ post, user, deletePost, likePost }: any) => {
 
       <div>
         <p className="text-ascent-2">
-           {showAll === post?._id
-            ? post?.description
-            : post?.description} 
+          {showAll === post?._id ? post?.description : post?.description}
 
           {post?.description?.length > 101 &&
             (showAll === post?._id ? (
@@ -254,8 +258,10 @@ const PostCard = ({ post, user, deletePost, likePost }: any) => {
         className="mt-4 flex justify-between items-center px-3 py-2 text-ascent-2
       text-base border-t border-[#66666645]"
       >
-        <p className="flex gap-2 items-center text-base cursor-pointer"
-        onClick={()=> handleLike("/posts/like/" + post?._id)}>
+        <p
+          className="flex gap-2 items-center text-base cursor-pointer"
+          onClick={() => handleLike("/posts/like/" + post?._id)}
+        >
           {post?.likes?.includes(user?._id) ? (
             <BiSolidLike size={20} color="blue" />
           ) : (
@@ -324,8 +330,12 @@ const PostCard = ({ post, user, deletePost, likePost }: any) => {
                   <p className="text-ascent-2">{comment?.comment}</p>
 
                   <div className="mt-2 flex gap-6">
-                    <p className="flex gap-2 items-center text-base text-ascent-2 cursor-pointer"
-                    onClick={()=> handleLike("/posts/like-comment/" + comment?._id) } >
+                    <p
+                      className="flex gap-2 items-center text-base text-ascent-2 cursor-pointer"
+                      onClick={() =>
+                        handleLike("/posts/like-comment/" + comment?._id)
+                      }
+                    >
                       {comment?.likes?.includes(user?._id) ? (
                         <BiSolidLike size={20} color="blue" />
                       ) : (
@@ -346,9 +356,7 @@ const PostCard = ({ post, user, deletePost, likePost }: any) => {
                       user={user}
                       id={comment?._id}
                       replyAt={comment?.from}
-                      getComments={() =>
-                         getComments(post?._id)
-                        }
+                      getComments={() => getComments(post?._id)}
                     />
                   )}
                 </div>
@@ -372,7 +380,7 @@ const PostCard = ({ post, user, deletePost, likePost }: any) => {
                   )}
 
                   {showReply === comment?.replies?._id &&
-                    comment?.replies?.map((reply:any) => (
+                    comment?.replies?.map((reply: any) => (
                       <ReplyCard
                         reply={reply}
                         user={user}

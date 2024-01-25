@@ -10,7 +10,8 @@ export const verifyEmail = async (req, res) => {
   const { userId, token } = req.params;
 
   try {
-    const result = await Verification.findOne({ userId });
+    const result = await verification.findOne({ userId });
+    console.log("🚀 ~ verifyEmail ~ result:", result)
 
     if (result) {
       const { expiresAt, token: hashedToken } = result;
@@ -66,7 +67,7 @@ export const verifyEmail = async (req, res) => {
       res.redirect(`/users/verified?status=error&message=${message}`);
     }
   } catch (error) {
-    console.log(err);
+    console.log(error);
     res.redirect(`/users/verified?message=`);
   }
 };

@@ -9,7 +9,7 @@ const commentSchema = new mongoose.Schema(
     replies: [
       {
         rid: { type: mongoose.Schema.Types.ObjectId },
-        userId: { type: Schema.Types.ObjectId, ref: "users" },
+        userId: { type: Schema.Types.ObjectId, ref: "Users" },
         from: { type: String },
         replyAt: { type: String },
         comment: { type: String },
@@ -25,5 +25,5 @@ const commentSchema = new mongoose.Schema(
   }
 );
 
-const Comments = mongoose.model("Comments", commentSchema);
+const Comments = mongoose?.models?.Comments || mongoose.model("Comments", commentSchema);
 export default Comments;
