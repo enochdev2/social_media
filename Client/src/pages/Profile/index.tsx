@@ -50,11 +50,11 @@ const uri = "/posts/get-user-post/" + id;
 
   return (
     <>
-      <div className="home w-full px-0 lg:px-10 pb-20 2xl:px-40 bg-bgColor lg:rounded-lg h-screen overflow-hidden">
+      <div className="home w-full px-0 lg:px-10 pb-20 2xl:px-40 bg-bgColor lg:rounded-lg h-screen overflow-y-auto">
         <TopBar />
-        <div className="w-full flex gap-2 lg:gap-4 md:pl-4 pt-5 pb-10 h-full">
+        <div className="w-full flex gap-2 lg:gap-4 md:pl-4 pt-5 pb-10 min-h-full">
           {/* LEFT */}
-          <div className="hidden w-1/3 lg:w-1/4 md:flex flex-col gap-6 overflow-y-auto">
+          <div className="hidden w-1/3 lg:w-1/4 min-h-full md:flex flex-col gap-6 ">
             <ProfileCard user={userInfo} />
 
             <div className="block lg:hidden">
