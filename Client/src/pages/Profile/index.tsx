@@ -34,7 +34,7 @@ const uri = "/posts/get-user-post/" + id;
   const handleDelete = async (id:string) => {
     await  deletePosts(id, user?.token);
     await getPosts();
-    window.location.reload();
+    // window.location.reload();
   };
 
   const handleLikePost = async(uri:string) => {

@@ -113,7 +113,6 @@ const CommentForm = ({ user, id, replyAt, getComments }: any) => {
         reset({
           comment: " ",
         });
-        window.location.reload();
         setErrMsg({ message: " " });
         await getComments();
       }
