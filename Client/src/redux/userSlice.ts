@@ -1,11 +1,9 @@
 import { Dispatch, createSlice } from "@reduxjs/toolkit";
-// import { SetStateAction } from "react";
 
 const initialState = {
   user: JSON.parse(window?.localStorage.getItem("user") as any),
   edit: false,
 };
-console.log("🚀 ~ initialState.user:", initialState.user)
 
 const userSlice = createSlice({
   name: "user",

@@ -225,7 +225,7 @@ const PostCard = ({ post, user, deletePost, likePost }: any) => {
 
       <div>
         <p className="text-ascent-2">
-          {showAll === post?._id ? post?.description : post?.description}
+          {showAll === post?._id ? post?.description : post?.description.slice(0, 300)}
 
           {post?.description?.length > 101 &&
             (showAll === post?._id ? (
