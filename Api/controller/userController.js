@@ -11,7 +11,6 @@ export const verifyEmail = async (req, res) => {
 
   try {
     const result = await verification.findOne({ userId });
-    console.log("🚀 ~ verifyEmail ~ result:", result)
 
     if (result) {
       const { expiresAt, token: hashedToken } = result;
@@ -32,43 +31,45 @@ export const verifyEmail = async (req, res) => {
           console.log(error);
           res.redirect(`/users/verified?message=`);
         });
-    } else {
-        compareString(token, hashedToken)
+      } else {
+      compareString(token, hashedToken)
         .then((isMatch) => {
           if (isMatch) {
             Users.findOneAndUpdate({ _id: userId }, { verified: true })
               .then(() => {
-                  verification.findOneAndDelete({ userId }).then(() => {
-                    const message = "Email verified successfully";
-                    res.redirect(
-                      `/users/verified?status=success&message=${message}`
-                    );
-                  });
-                })
-                .catch((err) => {
-                  console.log(err);
-                  const message = "Verification failed or link is invalid";
+                verification.findOneAndDelete({ userId }).then(() => {
+                  // const message = "Email verified successfully";
+                  // res.redirect(
+                  //   `/users/verified?status=success&message=${message}`
+                  // );
                   res.redirect(
-                    `/users/verified?status=error&message=${message}`
+                    `http://localhost:5173/login`
                   );
                 });
-            } else {
-              const message = "Verification failed or link is invalid";
-              res.redirect(`/users/verified?status=error&message=${message}`);
-            }
-          })
-          .catch((err) => {
-            console.log(err);
-            res.redirect(`/users/verified?message=`);
-          });
+              })
+              .catch((err) => {
+                console.log(err);
+                const message = "Verification failed or link is invalid";
+                res.redirect(`/users/verified?status=error&message=${message}`);
+              });
+          } else {
+            const message = "Verification failed or link is invalid";
+            res.redirect(`/users/verified?status=error&message=${message}`);
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+          const message = "Verification failed or link is invalid";
+          res.redirect(`/users/verified?message=${message}`);
+        });
       }
     } else {
       const message = "Invalid verification link. Try again later.";
       res.redirect(`/users/verified?status=error&message=${message}`);
     }
   } catch (error) {
-    console.log(error);
-    res.redirect(`/users/verified?message=`);
+    const message = "Verification failed or link is invalid";
+    res.redirect(`/users/verified?message=${message}`);
   }
 };
 
@@ -288,7 +289,8 @@ export const getFriendRequest = async (req, res) => {
       requestTo: userId,
       requestStatus: "Pending",
     })
-      .populate("requestFrom").select("-password")
+      .populate("requestFrom")
+      .select("-password")
       .limit(10)
       .sort({
         _id: -1,
@@ -389,8 +391,7 @@ export const suggestedFriends = async (req, res) => {
 
     queryObject.friends = { $nin: userId };
 
-    let queryResult = Users.find(queryObject)
-      .limit(15).select("-password");
+    let queryResult = Users.find(queryObject).limit(15).select("-password");
 
     const suggestedFriends = await queryResult;
 

@@ -27,9 +27,9 @@ export const register = async (req, res, next) => {
       password: hashedPassword,
     });
 
+    await user.save();
     sendVerificationEmail(user, res);
 
-    // await user.save();
     // res.status(201).json({
     //   success: true,
     //   message: "Register Successfully",

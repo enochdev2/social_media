@@ -46,12 +46,12 @@ const TopBar = () => {
       </Link>
 
       <form
-        className="hidden md:flex items-center justify-center mr-3"
+        className="hidden sm:flex  items-center  justify-center mr-3"
         onSubmit={handleSubmit(handleSearch)}
       >
         <TextInput
           placeholder="Search..."
-          styles="w-[18rem] lg:w-[38rem]  rounded-l-full py-3 "
+          styles=" w-[10rem]  md:w-[15rem] lg:w-[26rem]  rounded-l-full py-3 "
           register={register("search")}
         />
         <CustomButton

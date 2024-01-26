@@ -16,6 +16,7 @@ const app = express();
 
 app.use(express.static(path.join(__dirname, "views/build")));
 
+
 await db();
 
 const PORT = process.env.port || 4000;

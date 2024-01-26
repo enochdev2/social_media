@@ -16,7 +16,8 @@ import {
 import userAuth from "../middleware/authMiddleware.js";
 
 const router = express.Router();
-const _dirname = path.resolve(path.dirname(""));
+const __dirname = path.resolve(path.dirname(""));
+
 
 router.get("/verify/:userId/:token", verifyEmail);
 // PASSWORD RESET
@@ -41,12 +42,13 @@ router.post("/profile-view", userAuth, profileViews);
 //suggested friends
 router.post("/suggested-friends", userAuth, suggestedFriends);
 
+
 router.get("/verified", (req, res) => {
-  res.sendFile(path.join(_dirname, "./views/build:", "index.html"));
+  res.sendFile(path.join(__dirname, "./views/build", "index.html"));
 });
 
 router.get("/resetpassword", (req, res) => {
-  res.sendFile(path.join(_dirname, "./views/build:", "index.html"));
+  res.sendFile(path.join(__dirname, "./views/build", "index.html"));
 });
 
 export default router;
