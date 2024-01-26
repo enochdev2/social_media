@@ -17,7 +17,7 @@ import { UpdateProfile } from "../redux/userSlice";
 type User = any
 
 const ProfileCard = ({ user }:User) => {
-  const { user: data, edit } = useSelector((state:User) => state.user);
+  const { user: data } = useSelector((state:User) => state.user);
   const dispatch = useDispatch();
 
   return (

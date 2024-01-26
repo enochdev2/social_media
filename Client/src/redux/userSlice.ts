@@ -27,19 +27,25 @@ const userSlice = createSlice({
 export default userSlice.reducer;
 
 export function UserLogin(user:any) {
-  return (dispatch:Dispatch, getState:SetStateAction<Dispatch>) => {
+  return (dispatch:Dispatch, 
+    // getState:SetStateAction<Dispatch>
+    ) => {
     dispatch(userSlice.actions.login(user));
   };
 }
 
 export function Logout() {
-  return (dispatch:Dispatch, getState:SetStateAction<Dispatch>) => {
+  return (dispatch:Dispatch, 
+    // getState:SetStateAction<Dispatch>
+    ) => {
     dispatch(userSlice.actions.logout());
   };
 }
 
 export function UpdateProfile(val:any) {
-  return (dispatch:Dispatch, getState:SetStateAction<Dispatch>) => {
+  return (dispatch:Dispatch,
+    // getState:SetStateAction<Dispatch>
+    ) => {
     dispatch(userSlice.actions.updateProfile(val));
   };
 }

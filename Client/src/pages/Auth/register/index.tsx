@@ -1,10 +1,9 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { useDispatch } from "react-redux";
+// import { useDispatch } from "react-redux";
 import { useForm } from "react-hook-form";
 import { TiSocialLastFm } from "react-icons/ti";
 import { BsShare } from "react-icons/bs";
-import { AiOutlineInteraction } from "react-icons/ai";
 import { ImConnection } from "react-icons/im";
 import CustomButton from "../../../components/CustomButton";
 import Loading from "../../../components/Loading";
@@ -16,7 +15,7 @@ import { apiRequest } from "../../../utils";
 const Register = () => { 
   const [errMsg, setErrMsg] = useState<any>("");
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
   const {
     register,
     handleSubmit,
