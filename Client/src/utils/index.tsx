@@ -2,7 +2,7 @@ import axios from "axios";
 import { SetPosts } from "../redux/postSlice";
 import { Dispatch } from "@reduxjs/toolkit";
 
-const API_URI = "http://localhost:3000";
+const API_URI = "https://dev-social-api-wdpu.onrender.com";
 
 export const Api = axios.create({
   baseURL: API_URI,
@@ -43,7 +43,9 @@ export const handleFileUpload = async (uploadFile: any) => {
 
   try {
     const response = await axios.post(
-      `https://api.cloudinary.com/v1_1/${import.meta.env.VITE_APP_CLOUDINARY_ID}/image/upload/`,
+      `https://api.cloudinary.com/v1_1/${
+        import.meta.env.VITE_APP_CLOUDINARY_ID
+      }/image/upload/`,
       formData
     );
     return response.data.secure_url;

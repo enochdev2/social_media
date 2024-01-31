@@ -16,52 +16,55 @@ export const verifyEmail = async (req, res) => {
       const { expiresAt, token: hashedToken } = result;
 
       if (expiresAt < Date.now()) {
-        verification.findOneAndDelete({ userId })
-        .then(() => {
-          Users.findOneAndDelete({ _id: userId })
-            .then(() => {
-              const message = "Verification token has expired.";
-              res.redirect(`/users/verified?status=error&message=${message}`);
-            })
-            .catch((err) => {
-              res.redirect(`/users/verified?status=error&message=`);
-            });
-        })
-        .catch((error) => {
-          console.log(error);
-          res.redirect(`/users/verified?message=`);
-        });
-      } else {
-      compareString(token, hashedToken)
-        .then((isMatch) => {
-          if (isMatch) {
-            Users.findOneAndUpdate({ _id: userId }, { verified: true })
+        verification
+          .findOneAndDelete({ userId })
+          .then(() => {
+            Users.findOneAndDelete({ _id: userId })
               .then(() => {
-                verification.findOneAndDelete({ userId }).then(() => {
-                  // const message = "Email verified successfully";
-                  // res.redirect(
-                  //   `/users/verified?status=success&message=${message}`
-                  // );
-                  res.redirect(
-                    `http://localhost:5173/login`
-                  );
-                });
+                const message = "Verification token has expired.";
+                res.redirect(`/users/verified?status=error&message=${message}`);
               })
               .catch((err) => {
-                console.log(err);
-                const message = "Verification failed or link is invalid";
-                res.redirect(`/users/verified?status=error&message=${message}`);
+                res.redirect(`/users/verified?status=error&message=`);
               });
-          } else {
+          })
+          .catch((error) => {
+            console.log(error);
+            res.redirect(`/users/verified?message=`);
+          });
+      } else {
+        compareString(token, hashedToken)
+          .then((isMatch) => {
+            if (isMatch) {
+              Users.findOneAndUpdate({ _id: userId }, { verified: true })
+                .then(() => {
+                  verification.findOneAndDelete({ userId }).then(() => {
+                    // const message = "Email verified successfully";
+                    // res.redirect(
+                    //   `/users/verified?status=success&message=${message}`
+                    // );
+                    res.redirect(
+                      `https://dev-social-community.vercel.app/login`
+                    );
+                  });
+                })
+                .catch((err) => {
+                  console.log(err);
+                  const message = "Verification failed or link is invalid";
+                  res.redirect(
+                    `/users/verified?status=error&message=${message}`
+                  );
+                });
+            } else {
+              const message = "Verification failed or link is invalid";
+              res.redirect(`/users/verified?status=error&message=${message}`);
+            }
+          })
+          .catch((err) => {
+            console.log(err);
             const message = "Verification failed or link is invalid";
-            res.redirect(`/users/verified?status=error&message=${message}`);
-          }
-        })
-        .catch((err) => {
-          console.log(err);
-          const message = "Verification failed or link is invalid";
-          res.redirect(`/users/verified?message=${message}`);
-        });
+            res.redirect(`/users/verified?message=${message}`);
+          });
       }
     } else {
       const message = "Invalid verification link. Try again later.";
