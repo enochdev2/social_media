@@ -50,7 +50,7 @@ const uri = "/posts/get-user-post/" + id;
 
   return (
     <>
-      <div className="home w-full md:px-2 px-8 lg:px-10 pb-20 2xl:px-40 bg-bgColor lg:rounded-lg h-screen overflow-y-auto">
+      <div className="home w-full md:px-2 px-4 lg:px-10 pb-20 2xl:px-40 bg-bgColor lg:rounded-lg h-screen overflow-y-auto">
         <TopBar />
         <div className="w-full flex flex-col md:flex-row gap-2 lg:gap-4 md:pl-4 pt-5 pb-10 min-h-full">
           {/* LEFT */}
@@ -63,7 +63,7 @@ const uri = "/posts/get-user-post/" + id;
           </div>
 
           {/* CENTER */}
-          <div className=" flex-1 h-full bg-orimary px-4 flex flex-col gap-6 overflow-y-auto">
+          <div className=" flex-1 h-full bg-orimary px-1 flex flex-col mt-3 gap-6 overflow-y-auto">
             {loading ? (
               <Loading />
             ) : posts?.length > 0 ? (
